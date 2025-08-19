@@ -32,7 +32,7 @@ const Dashboard = () => {
     try {
       const token = localStorage.getItem('token');
       const config = { headers: { 'x-auth-token': token } };
-      await axios.delete(`${process.env.REACT_APP_API_URL}/transactions/${id}`, config);
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/transactions/${id}`, config);
       setTransactions(transactions.filter((t) => t._id !== id));
       console.log('Transaction deleted successfully!');
     } catch (err) {
@@ -61,7 +61,7 @@ const Dashboard = () => {
         const token = localStorage.getItem('token');
         if (!token) return;
         const config = { headers: { 'x-auth-token': token } };
-        const res = await axios.get(`${process.env.REACT_APP_API_URL}/transactions?page=${page}&limit=${limit}`, config);
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/transactions?page=${page}&limit=${limit}`, config);
         setTransactions(res.data);
       } catch (err) {
         console.error('Error fetching transactions:', err);
@@ -73,7 +73,7 @@ const Dashboard = () => {
         const token = localStorage.getItem('token');
         if (!token) return;
         const config = { headers: { 'x-auth-token': token } };
-        const res = await axios.get(`${process.env.REACT_APP_API_URL}/transactions/summary`, config);
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/transactions/summary`, config);
         setSummary(res.data);
       } catch (err) {
         console.error('Error fetching summary:', err);
