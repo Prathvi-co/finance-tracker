@@ -33,7 +33,7 @@ const Reports = () => {
           },
         };
 
-        const res = await axios.get(`${process.env.REACT_APP_API_URL}/transactions/reports`, config);
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/transactions/reports`, config);
 
         const aggregatedData = res.data.reduce((acc, curr) => {
           const key = `${curr._id.year}-${String(curr._id.month).padStart(2, '0')}`;
