@@ -23,7 +23,7 @@ const TransactionEditForm = ({ transactionToEdit, onTransactionUpdated, onCancel
         },
       };
 
-      const res = await axios.put(`http://localhost:5000/api/transactions/${transactionToEdit._id}`, formData, config);
+      const res = await axios.put(`${process.env.REACT_APP_API_URL}/transactions/${transactionToEdit._id}`, formData, config);
       onTransactionUpdated(res.data);
       console.log('Transaction updated:', res.data);
     } catch (err) {

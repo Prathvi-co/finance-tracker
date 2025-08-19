@@ -41,7 +41,7 @@ const TransactionForm = ({ onTransactionAdded }) => {
 
       const transactionData = { ...formData, date: selectedDate };
 
-      const res = await axios.post('http://localhost:5000/api/transactions', transactionData, config);
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/transactions`, transactionData, config);
       onTransactionAdded(res.data);
       console.log('Transaction added:', res.data);
       setFormData({ description: '', amount: '', category: '', type: 'expense' });
