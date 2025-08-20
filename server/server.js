@@ -22,7 +22,11 @@ const MONGO_URI = process.env.MONGO_URI;
 
 // Middleware to parse JSON bodies
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL,
+  credentials: true
+}));
+
 
 // Connect to MongoDB
 mongoose.connect(MONGO_URI)

@@ -9,6 +9,7 @@ const crypto = require('crypto');
 const JWT_SECRET = process.env.JWT_SECRET;
 const EMAIL_USER = process.env.EMAIL_USER;
 const EMAIL_PASS = process.env.EMAIL_PASS;
+const FRONTEND_URL = process.env.FRONTEND_URL;
 
 const transporter = nodemailer.createTransport({
   service: 'Gmail',
@@ -118,7 +119,7 @@ const forgotPassword = async (req, res) => {
     user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
     await user.save();
 
-    const resetUrl = `http://localhost:3000/reset-password/${resetToken}`;
+    const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
 
     const mailOptions = {
       to: user.email,
