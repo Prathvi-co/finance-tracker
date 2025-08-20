@@ -40,7 +40,7 @@ const Header = () => {
           },
         };
 
-        const res = await axios.get('${process.env.REACT_APP_API_URL}/api/auth/user', config);
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/auth/user`, config);
         setUser(res.data);
       } catch (err) {
         console.error('Failed to fetch user data:', err);
