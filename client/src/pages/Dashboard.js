@@ -7,7 +7,7 @@ import TransactionForm from './TransactionForm';
 import TransactionEditForm from './TransactionEditForm';
 import AuthContext from '../authContext';
 import PieChart from './PieChart';
-import backgroundImage from '../assets/financial-planning-image.jpg.jpg'; // Make sure this path and filename are correct
+import backgroundImage from '../assets/financial-planning-image.jpg.jpg';
 
 const Dashboard = () => {
   const { logout } = useContext(AuthContext);
@@ -34,9 +34,8 @@ const Dashboard = () => {
       const config = { headers: { 'x-auth-token': token } };
       await axios.delete(`${process.env.REACT_APP_API_URL}/api/transactions/${id}`, config);
       setTransactions(transactions.filter((t) => t._id !== id));
-      console.log('Transaction deleted successfully!');
     } catch (err) {
-      console.error('Failed to delete transaction:', err.response.data);
+      console.error('Failed to delete transaction:', err.response?.data || err.message);
     }
   };
 
@@ -49,9 +48,9 @@ const Dashboard = () => {
   };
 
   const handleTransactionUpdated = (updatedTransaction) => {
-    setTransactions(transactions.map((t) =>
-      t._id === updatedTransaction._id ? updatedTransaction : t
-    ));
+    setTransactions((prev) =>
+      prev.map((t) => (t._id === updatedTransaction._id ? updatedTransaction : t))
+    );
     setEditingTransaction(null);
   };
 
@@ -61,10 +60,13 @@ const Dashboard = () => {
         const token = localStorage.getItem('token');
         if (!token) return;
         const config = { headers: { 'x-auth-token': token } };
-        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/transactions?page=${page}&limit=${limit}`, config);
+        const res = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/transactions?page=${page}&limit=${limit}`,
+          config
+        );
         setTransactions(res.data);
       } catch (err) {
-        console.error('Error fetching transactions:', err);
+        console.error('Error fetching transactions:', err.response?.data || err.message);
       }
     };
 
@@ -73,33 +75,42 @@ const Dashboard = () => {
         const token = localStorage.getItem('token');
         if (!token) return;
         const config = { headers: { 'x-auth-token': token } };
-        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/transactions/summary`, config);
+        const res = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/transactions/summary`,
+          config
+        );
         setSummary(res.data);
       } catch (err) {
-        console.error('Error fetching summary:', err);
+        console.error('Error fetching summary:', err.response?.data || err.message);
       }
     };
 
     fetchTransactions();
     fetchSummary();
-  }, [logout, page, limit]);
+  }, [page, limit]);
 
   return (
     <div
       className="min-h-screen bg-cover bg-center bg-no-repeat relative"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      {/* Overlay */}
       <div className="absolute inset-0 bg-white bg-opacity-40 backdrop-blur-sm"></div>
 
-      {/* Main Content */}
       <div className="relative z-10 p-8">
         <div className="max-w-4xl mx-auto bg-white bg-opacity-70 backdrop-blur-sm p-6 rounded-lg shadow-md">
 
+          {/* Header */}
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-3xl font-bold text-gray-800">Your Dashboard</h2>
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+            >
+              Logout
+            </button>
           </div>
 
+          {/* Summary Section */}
           {summary && (
             <div className="mb-8 p-6 bg-gray-50 rounded-lg shadow-inner">
               <h3 className="text-xl font-semibold mb-4 text-gray-700">Financial Overview</h3>
@@ -118,6 +129,7 @@ const Dashboard = () => {
                 </div>
               </div>
 
+              {/* Category + PieChart */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                 <div>
                   <h4 className="text-lg font-semibold mb-2 text-gray-700">Spending by Category</h4>
@@ -132,16 +144,22 @@ const Dashboard = () => {
                     ))}
                   </ul>
                 </div>
-
-                <div className="w-64 mx-auto">
-                  <h4 className="text-lg font-semibold mb-2 text-gray-700 text-center">Spending Distribution</h4>
-                  <PieChart spendingData={summary.spendingByCategory} />
+                {/* Fix responsiveness for PieChart */}
+                <div className="flex justify-center w-full">
+                  <div className="w-56 sm:w-64 md:w-72">
+                    <h4 className="text-lg font-semibold mb-2 text-gray-700 text-center">
+                      Spending Distribution
+                    </h4>
+                    <PieChart spendingData={summary.spendingByCategory} />
+                  </div>
                 </div>
               </div>
             </div>
           )}
 
+          {/* Transactions + Form */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Left side: Add/Edit */}
             <div>
               {editingTransaction ? (
                 <TransactionEditForm
@@ -153,6 +171,8 @@ const Dashboard = () => {
                 <TransactionForm onTransactionAdded={handleTransactionAdded} />
               )}
             </div>
+
+            {/* Right side: Transaction list */}
             <div>
               <h3 className="text-2xl font-semibold mb-4 text-gray-700">My Transactions</h3>
               <ul className="space-y-4">
@@ -163,7 +183,13 @@ const Dashboard = () => {
                   >
                     <div>
                       <p className="font-semibold text-gray-800">{transaction.description}</p>
-                      <p className={`text-sm ₹{transaction.type === 'income' ? 'text-green-500' : 'text-red-500'}`}>
+                      <p
+                        className={`text-sm ${
+                          transaction.type === 'income'
+                            ? 'text-green-500'
+                            : 'text-red-500'
+                        }`}
+                      >
                         ₹{transaction.amount} ({transaction.type})
                       </p>
                     </div>
@@ -184,11 +210,13 @@ const Dashboard = () => {
                   </li>
                 ))}
               </ul>
+
+              {/* Pagination */}
               <div className="flex justify-between mt-4">
                 <button
                   onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
                   disabled={page === 1}
-                  className="px-4 py-2 bg-gray-300 rounded-lg"
+                  className="px-4 py-2 bg-gray-300 rounded-lg disabled:opacity-50"
                 >
                   Previous
                 </button>
@@ -202,6 +230,7 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </div>

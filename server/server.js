@@ -5,15 +5,15 @@ dotenv.config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-//const dotenv = require('dotenv');
+
 
 // Import the auth routes
 const authRoutes = require('./routes/authRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
 console.log('Transaction Routes loaded:', transactionRoutes); 
 
-// Load environment variables from .env file
-//dotenv.config();
+
+
 
 const app = express();
 

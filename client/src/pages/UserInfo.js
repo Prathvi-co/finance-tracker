@@ -42,45 +42,48 @@ const UserInfo = () => {
       className="relative min-h-screen bg-cover bg-center flex items-center justify-center"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-black/60"></div>
+      {/* Dark overlay for readability */}
+      <div className="absolute inset-0 bg-black/50"></div>
 
       {/* Foreground content */}
-      <div className="relative z-10 p-8 bg-white/70 backdrop-blur-sm rounded-lg shadow-lg max-w-lg w-full">
-        <h2 className="text-3xl font-bold text-blue-900 mb-6 text-center">User Profile</h2>
+      <div className="relative z-10 p-8 rounded-2xl max-w-lg w-full 
+                      bg-white/30 backdrop-blur-lg border border-white/20">
+        <h2 className="text-3xl font-bold text-blue-900 mb-6 text-center drop-shadow-sm">
+          User Profile
+        </h2>
 
         {loading ? (
-          <p className="text-gray-600 text-center">Loading user information...</p>
+          <p className="text-gray-700 text-center">Loading user information...</p>
         ) : error ? (
           <p className="text-red-500 text-center">{error}</p>
         ) : user ? (
           <div className="space-y-4">
             <div>
-              <p className="text-sm text-gray-600">Full Name</p>
-              <p className="text-lg font-medium text-blue-900">{user.name}</p>
+              <p className="text-sm text-gray-700">Full Name</p>
+              <p className="text-lg font-semibold text-blue-900">{user.name}</p>
             </div>
 
             <div>
-              <p className="text-sm text-gray-600">Email</p>
-              <p className="text-lg font-medium text-blue-900">{user.email}</p>
+              <p className="text-sm text-gray-700">Email</p>
+              <p className="text-lg font-semibold text-blue-900">{user.email}</p>
             </div>
 
             <div>
-              <p className="text-sm text-gray-600">Account Created</p>
-              <p className="text-lg font-medium text-blue-900">
+              <p className="text-sm text-gray-700">Account Created</p>
+              <p className="text-lg font-semibold text-blue-900">
                 {new Date(user.date).toLocaleDateString()}
               </p>
             </div>
 
             <div>
-              <p className="text-sm text-gray-600">Status</p>
+              <p className="text-sm text-gray-700">Status</p>
               <span className="inline-block px-3 py-1 text-sm font-semibold text-white bg-blue-900 rounded-full">
                 Active
               </span>
             </div>
           </div>
         ) : (
-          <p className="text-gray-600 text-center">Please log in to view your information.</p>
+          <p className="text-gray-700 text-center">Please log in to view your information.</p>
         )}
       </div>
     </div>
