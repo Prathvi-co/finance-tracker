@@ -1,112 +1,93 @@
-// client/src/pages/AboutUs.js
+// client/src/pages/UserInfo.js
 
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
+import AuthContext from '../authContext';
 import backgroundImage from '../assets/financial-planning-image.jpg.jpg'; // Ensure this path is correct
 
-const AboutUs = () => {
+const UserInfo = () => {
+  const { isAuthenticated } = useContext(AuthContext);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
+        const config = {
+          headers: {
+            'x-auth-token': token,
+          },
+        };
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/auth/user`, config);
+        setUser(res.data);
+      } catch (err) {
+        console.error('Failed to fetch user data:', err);
+        setError('Failed to load user information.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (isAuthenticated) {
+      fetchUser();
+    }
+  }, [isAuthenticated]);
+
   return (
     <div
       className="relative min-h-screen bg-cover bg-center flex items-center justify-center"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-black/60"></div>
+      {/* Dark overlay for readability */}
+      <div className="absolute inset-0 bg-black/50"></div>
 
       {/* Foreground content */}
-      <div className="relative z-10 max-w-4xl w-full bg-white/70 backdrop-blur-sm p-10 rounded-lg shadow-xl">
-        <h2 className="text-4xl font-bold text-blue-900 mb-6 text-center">
-          About Your Finance Tracker
+      <div className="relative z-10 p-8 rounded-2xl max-w-lg w-full 
+                      bg-white/30 backdrop-blur-lg border border-white/20">
+        <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center drop-shadow-sm">
+          User Profile
         </h2>
 
-        <p className="mb-6 text-gray-700 leading-relaxed text-center">
-          Take control of your financial future with our intuitive and easy-to-use Finance Tracker.
-          We empower you to monitor your income, track your expenses, and gain valuable insights into your spending habits, all in one place.
-          Our goal is to provide you with the tools you need to achieve your financial goals.
-        </p>
+        {loading ? (
+          <p className="text-gray-800 text-center">Loading user information...</p>
+        ) : error ? (
+          <p className="text-red-500 text-center">{error}</p>
+        ) : user ? (
+          <div className="space-y-4">
+            <div>
+              <p className="text-sm text-gray-700">Full Name</p>
+              <p className="text-lg font-semibold text-gray-950">{user.name}</p>
+            </div>
 
-        <h3 className="text-2xl font-semibold mb-4 text-blue-900 border-b pb-2 text-center">
-          Key Features to Help You Succeed:
-        </h3>
+            <div>
+              <p className="text-sm text-gray-700">Email</p>
+              <p className="text-lg font-semibold text-gray-950">{user.email}</p>
+            </div>
 
-        <ul className="space-y-4">
-          <li className="flex items-center space-x-3">
-            <svg
-              className="h-6 w-6 text-blue-900"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-            <p className="text-lg text-gray-700">
-              <strong className="text-blue-900">Effortless Transaction Tracking:</strong> Easily add your income and expenses with detailed descriptions, amounts, categories, and dates.
-            </p>
-          </li>
+            <div>
+              <p className="text-sm text-gray-700">Account Created</p>
+              <p className="text-lg font-semibold text-gray-950">
+                {new Date(user.date).toLocaleDateString()}
+              </p>
+            </div>
 
-          <li className="flex items-center space-x-3">
-            <svg
-              className="h-6 w-6 text-blue-900"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-            <p className="text-lg text-gray-700">
-              <strong className="text-blue-900">Clear Dashboard Overview:</strong> Get an instant snapshot of your current balance and spending habits through our interactive dashboard.
-            </p>
-          </li>
-
-          <li className="flex items-center space-x-3">
-            <svg
-              className="h-6 w-6 text-blue-900"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-            <p className="text-lg text-gray-700">
-              <strong className="text-blue-900">Detailed Financial Reports:</strong> Visualize your monthly spending trends with clear charts and reports, helping you make informed financial decisions.
-            </p>
-          </li>
-
-          <li className="flex items-center space-x-3">
-            <svg
-              className="h-6 w-6 text-blue-900"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-            <p className="text-lg text-gray-700">
-              <strong className="text-blue-900">Secure User Profile:</strong> Manage your personal information and password securely within the application.
-            </p>
-          </li>
-        </ul>
-
-        {/* ✅ Restored CTA section */}
-        <div className="mb-8 text-center mt-10">
-          <h3 className="text-2xl font-semibold text-gray-700 mb-2">Why Choose Us?</h3>
-          <p className="text-gray-600">
-            We're more than just an expense tracker. We’re your partner in building a confident and stress-free financial life.
-            Whether you're budgeting for a vacation, saving for retirement, or just trying to stay on top of bills — we're here to help.
-          </p>
-        </div>
-
-        <div className="flex justify-center">
-          <button className="bg-blue-900 hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-lg shadow transition-transform transform hover:scale-105">
-            Get Started Today
-          </button>
-        </div>
+            <div>
+              <p className="text-sm text-gray-700">Status</p>
+              <span className="inline-block px-3 py-1 text-sm font-semibold text-white bg-blue-900 rounded-full">
+                Active
+              </span>
+            </div>
+          </div>
+        ) : (
+          <p className="text-gray-800 text-center">Please log in to view your information.</p>
+        )}
       </div>
     </div>
   );
 };
 
-export default AboutUs;
+export default UserInfo;

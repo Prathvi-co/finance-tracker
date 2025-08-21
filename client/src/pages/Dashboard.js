@@ -19,11 +19,6 @@ const Dashboard = () => {
   const [page, setPage] = useState(1);
   const [limit] = useState(4);
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
-
   const handleTransactionAdded = (newTransaction) => {
     setTransactions([newTransaction, ...transactions]);
   };
@@ -99,15 +94,9 @@ const Dashboard = () => {
       <div className="relative z-10 p-8">
         <div className="max-w-4xl mx-auto bg-white bg-opacity-70 backdrop-blur-sm p-6 rounded-lg shadow-md">
 
-          {/* Header */}
+          {/* Header (removed logout button) */}
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-3xl font-bold text-gray-800">Your Dashboard</h2>
-            <button
-              onClick={handleLogout}
-              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-            >
-              Logout
-            </button>
           </div>
 
           {/* Summary Section */}
@@ -144,7 +133,6 @@ const Dashboard = () => {
                     ))}
                   </ul>
                 </div>
-                {/* Fix responsiveness for PieChart */}
                 <div className="flex justify-center w-full">
                   <div className="w-56 sm:w-64 md:w-72">
                     <h4 className="text-lg font-semibold mb-2 text-gray-700 text-center">
