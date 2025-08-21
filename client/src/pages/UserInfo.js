@@ -48,42 +48,42 @@ const UserInfo = () => {
       {/* Foreground content */}
       <div className="relative z-10 p-8 rounded-2xl max-w-lg w-full 
                       bg-white/30 backdrop-blur-lg border border-white/20">
-        <h2 className="text-3xl font-bold text-blue-900 mb-6 text-center drop-shadow-sm">
+        <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center drop-shadow-sm">
           User Profile
         </h2>
 
         {loading ? (
-          <p className="text-gray-700 text-center">Loading user information...</p>
+          <p className="text-gray-900 text-center">Loading user information...</p>
         ) : error ? (
           <p className="text-red-500 text-center">{error}</p>
         ) : user ? (
           <div className="space-y-4">
             <div>
-              <p className="text-sm text-gray-700">Full Name</p>
-              <p className="text-lg font-semibold text-blue-900">{user.name}</p>
+              <p className="text-sm font-medium text-black">Full Name</p>
+              <p className="text-lg font-semibold text-blue-800">{user.name}</p>
             </div>
 
             <div>
-              <p className="text-sm text-gray-700">Email</p>
-              <p className="text-lg font-semibold text-blue-900">{user.email}</p>
+              <p className="text-sm font-medium text-black">Email</p>
+              <p className="text-lg font-semibold text-blue-800">{user.email}</p>
             </div>
 
             <div>
-              <p className="text-sm text-gray-700">Account Created</p>
-              <p className="text-lg font-semibold text-blue-900">
+              <p className="text-sm font-medium text-black">Account Created</p>
+              <p className="text-lg font-semibold text-blue-800">
                 {new Date(user.date).toLocaleDateString()}
               </p>
             </div>
 
             <div>
-              <p className="text-sm text-gray-700">Status</p>
+              <p className="text-sm font-medium text-black">Status</p>
               <span className="inline-block px-3 py-1 text-sm font-semibold text-white bg-blue-900 rounded-full">
                 Active
               </span>
             </div>
           </div>
         ) : (
-          <p className="text-gray-700 text-center">Please log in to view your information.</p>
+          <p className="text-gray-900 text-center">Please log in to view your information.</p>
         )}
       </div>
     </div>
